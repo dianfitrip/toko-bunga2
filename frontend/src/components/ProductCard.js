@@ -2,24 +2,30 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './ProductCard.css';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ id, name, price, image, description }) => {
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(price);
+  };
+
   return (
     <div className="product-card">
       <div className="product-image">
-        <img 
-          src={product.image || '/placeholder-image.jpg'} 
-          alt={product.name} 
-        />
+        <img src={image} alt={name} />
+        <div className="product-overlay">
+          <Link to={`/products/${id}`} className="view-details-btn">
+            Lihat Detail
+          </Link>
+        </div>
       </div>
       <div className="product-info">
-        <h3 className="product-name">{product.name}</h3>
-        <p className="product-price">Rp {product.price.toLocaleString()}</p>
-        <p className="product-rating">
-          Rating: {product.avg_rating ? product.avg_rating.toFixed(1) : 'Belum ada rating'}
-        </p>
-        <Link to={`/products/${product.id}`} className="view-details-btn">
-          Lihat Detail
-        </Link>
+        <h3 className="product-name">{name}</h3>
+        <p className="product-description">{description}</p>
+        <div className="product-price">{formatPrice(price)}</div>
+        <button className="add-to-cart-btn">Tambah ke Keranjang</button>
       </div>
     </div>
   );

@@ -1,60 +1,95 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import './Navbar.css';
 
 const Navbar = () => {
-  const { currentUser, logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
 
   const handleLogout = () => {
     logout();
+    setIsProfileMenuOpen(false);
+    setIsMenuOpen(false);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+    setIsProfileMenuOpen(false);
   };
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <Link to="/" className="nav-logo">
-          FLORIST
+        <Link to="/" className="nav-logo" onClick={closeMenu}>
+          <i className="fas fa-leaf"></i> FLORIST
         </Link>
-        <ul className="nav-menu">
-          <li className="nav-item">
-            <Link to="/" className="nav-link">Home</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/products" className="nav-link">Produk</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/info" className="nav-link">Info Toko</Link>
-          </li>
+        
+        <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
+          <Link to="/" className="nav-link" onClick={closeMenu}>
+            Home
+          </Link>
+          <Link to="/products" className="nav-link" onClick={closeMenu}>
+            Products
+          </Link>
+          <Link to="/cart" className="nav-link" onClick={closeMenu}>
+            Cart
+          </Link>
           
-          {currentUser ? (
-            <>
-              {currentUser.role === 'admin' ? (
-                <li className="nav-item">
-                  <Link to="/admin" className="nav-link">Admin</Link>
-                </li>
-              ) : (
-                <li className="nav-item">
-                  <Link to="/cart" className="nav-link">Keranjang</Link>
-                </li>
-              )}
-              <li className="nav-item">
-                <span className="nav-link">Halo, {currentUser.name}</span>
-              </li>
-              <li className="nav-item">
-                <button onClick={handleLogout} className="nav-link">Logout</button>
-              </li>
-            </>
+          {!user ? (
+            <Link to="/login" className="nav-link" onClick={closeMenu}>
+              Login
+            </Link>
           ) : (
-            <>
-              <li className="nav-item">
-                <Link to="/login" className="nav-link">Login</Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/register" className="nav-link">Register</Link>
-              </li>
-            </>
+            <div className="profile-menu-container">
+              <div className="profile-icon" onClick={toggleProfileMenu}>
+                <i className="fas fa-user-circle"></i>
+                <span>{user.name || user.email}</span>
+                <i className={`fas fa-chevron-${isProfileMenuOpen ? 'up' : 'down'}`}></i>
+              </div>
+              
+              {isProfileMenuOpen && (
+                <div className="profile-dropdown">
+                  <div className="profile-info">
+                    <i className="fas fa-user"></i>
+                    <span>{user.name || user.email}</span>
+                  </div>
+                  
+                  <div className="dropdown-divider"></div>
+                  
+                  <Link to="/profile" className="dropdown-item" onClick={closeMenu}>
+                    <i className="fas fa-user"></i> Profil Saya
+                  </Link>
+                  
+                  <Link to="/orders" className="dropdown-item" onClick={closeMenu}>
+                    <i className="fas fa-shopping-bag"></i> Pesanan Saya
+                  </Link>
+                  
+                  <div className="dropdown-divider"></div>
+                  
+                  <button className="dropdown-item logout-btn" onClick={handleLogout}>
+                    <i className="fas fa-sign-out-alt"></i> Logout
+                  </button>
+                </div>
+              )}
+            </div>
           )}
-        </ul>
+        </div>
+        
+        <div className="nav-toggle" onClick={toggleMenu}>
+          <span className="bar"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
+        </div>
       </div>
     </nav>
   );
