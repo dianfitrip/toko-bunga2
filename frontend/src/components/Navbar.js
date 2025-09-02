@@ -18,47 +18,54 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Helper function to close menu on link click
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <Link to="/" className="nav-logo">
+        <Link to="/" className="nav-logo" onClick={closeMenu}>
           FLORIST
         </Link>
 
         <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
-          <Link to="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-            Home
-          </Link>
-          <Link to="/products" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-            Products
-          </Link>
           
-          {currentUser ? (
-            <>
-              {currentUser.role === 'admin' && (
-                <Link to="/admin" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-                  Admin Panel
-                </Link>
-              )}
-              <Link to="/cart" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-                <i className="fas fa-shopping-cart"></i> Cart
-              </Link>
-              <div className="nav-user">
-                <span>Hello, {currentUser.name}</span>
-                <button onClick={handleLogout} className="nav-logout">
-                  Logout
-                </button>
-              </div>
-            </>
+          {/* --- LOGIKA BARU UNTUK TAMPILAN MENU --- */}
+          
+          {/* 1. Tampilkan menu berdasarkan peran (role) pengguna */}
+          {currentUser && currentUser.role === 'admin' ? (
+            // Jika pengguna adalah ADMIN, tampilkan hanya Admin Panel
+            <Link to="/admin" className="nav-link" onClick={closeMenu}>
+              Admin Panel
+            </Link>
           ) : (
+            // Jika BUKAN admin (buyer atau pengunjung), tampilkan Home dan Products
             <>
-              <Link to="/login" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-                Login
+              <Link to="/" className="nav-link" onClick={closeMenu}>
+                Home
               </Link>
-              <Link to="/register" className="nav-link" onClick={() => setIsMenuOpen(false)}>
-                Register
+              <Link to="/products" className="nav-link" onClick={closeMenu}>
+                Products
               </Link>
             </>
+          )}
+          
+          {/* 2. Tampilkan info login/logout */}
+          {currentUser ? (
+            // Jika ada pengguna yang login (admin atau buyer)
+            <div className="nav-user">
+              <span>Hello, {currentUser.name || 'User'}</span>
+              <button onClick={handleLogout} className="nav-logout">
+                Logout
+              </button>
+            </div>
+          ) : (
+            // Jika tidak ada yang login
+            <Link to="/login" className="nav-link" onClick={closeMenu}>
+              Login
+            </Link>
           )}
         </div>
 
