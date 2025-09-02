@@ -8,12 +8,13 @@ const RegisterPage = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'buyer' // Default role is buyer
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -48,18 +49,21 @@ const RegisterPage = () => {
     }
 
     try {
-      // Simulasi pendaftaran (ganti dengan API call yang sesungguhnya)
-      // Untuk demo, kita anggap registrasi selalu berhasil
-      setTimeout(() => {
-        login({ 
-          email: formData.email, 
-          name: formData.name
-        });
-        navigate('/');
-      }, 1000);
+      const result = await register(formData);
       
+      if (result.success) {
+        // Redirect based on role
+        if (result.user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      } else {
+        setError(result.error);
+      }
     } catch (err) {
       setError('Registrasi gagal. Silakan coba lagi.');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -127,6 +131,21 @@ const RegisterPage = () => {
               required
               disabled={isLoading}
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="role">Role</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              required
+              disabled={isLoading}
+            >
+              <option value="buyer">Buyer</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
           
           <button 

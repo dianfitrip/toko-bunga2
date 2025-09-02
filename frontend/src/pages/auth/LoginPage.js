@@ -27,25 +27,21 @@ const LoginPage = () => {
     setError('');
 
     try {
-      // Validasi input
-      if (!formData.email || !formData.password) {
-        setError('Email dan password harus diisi');
-        setIsLoading(false);
-        return;
-      }
-
-      // Simulasi login (ganti dengan API call yang sesungguhnya)
-      // Untuk demo, kita anggap login selalu berhasil
-      setTimeout(() => {
-        login({ 
-          email: formData.email, 
-          name: formData.email.split('@')[0] // Simulasi nama user dari email
-        });
-        navigate('/');
-      }, 1000);
+      const result = await login(formData.email, formData.password);
       
+      if (result.success) {
+        // Redirect based on role
+        if (result.user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      } else {
+        setError(result.error);
+      }
     } catch (err) {
       setError('Login gagal. Silakan coba lagi.');
+    } finally {
       setIsLoading(false);
     }
   };
