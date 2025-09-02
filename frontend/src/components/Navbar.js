@@ -18,7 +18,6 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Helper function to close menu on link click
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
@@ -32,16 +31,12 @@ const Navbar = () => {
 
         <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
           
-          {/* --- LOGIKA BARU UNTUK TAMPILAN MENU --- */}
-          
-          {/* 1. Tampilkan menu berdasarkan peran (role) pengguna */}
+          {/* Menu Utama Berdasarkan Peran */}
           {currentUser && currentUser.role === 'admin' ? (
-            // Jika pengguna adalah ADMIN, tampilkan hanya Admin Panel
             <Link to="/admin" className="nav-link" onClick={closeMenu}>
               Admin Panel
             </Link>
           ) : (
-            // Jika BUKAN admin (buyer atau pengunjung), tampilkan Home dan Products
             <>
               <Link to="/" className="nav-link" onClick={closeMenu}>
                 Home
@@ -51,10 +46,21 @@ const Navbar = () => {
               </Link>
             </>
           )}
+
+          {/* Menu Khusus untuk Buyer yang sudah Login */}
+          {currentUser && currentUser.role === 'buyer' && (
+            <>
+              <Link to="/cart" className="nav-link" onClick={closeMenu}>
+                Cart
+              </Link>
+              <Link to="/my-orders" className="nav-link" onClick={closeMenu}>
+                Riwayat Pesanan
+              </Link>
+            </>
+          )}
           
-          {/* 2. Tampilkan info login/logout */}
+          {/* Info Login/Logout */}
           {currentUser ? (
-            // Jika ada pengguna yang login (admin atau buyer)
             <div className="nav-user">
               <span>Hello, {currentUser.name || 'User'}</span>
               <button onClick={handleLogout} className="nav-logout">
@@ -62,10 +68,11 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            // Jika tidak ada yang login
-            <Link to="/login" className="nav-link" onClick={closeMenu}>
-              Login
-            </Link>
+            ! (currentUser && currentUser.role === 'admin') && (
+              <Link to="/login" className="nav-link" onClick={closeMenu}>
+                Login
+              </Link>
+            )
           )}
         </div>
 

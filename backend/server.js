@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const multer = require('multer');
 
 // Load env vars
 dotenv.config();
@@ -11,6 +12,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Debug: Test basic route
@@ -18,7 +20,7 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is working!' });
 });
 
-// Import dan debug routes satu per satu
+// Import routes
 try {
   const authRoutes = require('./routes/auth');
   console.log('✓ Auth routes loaded successfully');
@@ -64,9 +66,14 @@ try {
   console.log('✓ User routes loaded successfully');
   app.use('/api/users', userRoutes);
 } catch (error) {
-    console.error('✗ Error loading user routes:', error.message);
+  console.error('✗ Error loading user routes:', error.message);
 }
 
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error('Unhandled error:', error);
+  res.status(500).json({ message: 'Internal server error', error: error.message });
+});
 
 const PORT = process.env.PORT || 5000;
 
