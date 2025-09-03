@@ -91,7 +91,7 @@ const AdminDashboard = () => {
 
         <div className="admin-content">
           <div className="quick-actions">
-            <h2>Quick Actions</h2>
+            <h2>Management Data</h2>
             <div className="action-buttons">
               <Link to="/admin/products" className="action-btn">
                 <i className="fas fa-box"></i>

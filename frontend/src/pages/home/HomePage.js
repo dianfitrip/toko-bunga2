@@ -40,7 +40,8 @@ const HomePage = () => {
       <section className="hero">
         <div className="hero-content">
           <h1>Toko Buket Bunga Terbaik di Bantul</h1>
-          <p>Selamat Datang, ayo borong!</p>
+          <p>Ayo Bungakan dan Hidupkan Dunia!</p>
+          <p>Setiap Bunga Adalah Mimpi Dari Benih Kecil Yang Menjadi Nyata.</p>
           <Link to="/products" className="cta-button">Lihat Produk</Link>
         </div>
       </section>
@@ -48,7 +49,7 @@ const HomePage = () => {
       {/* Featured Products */}
       <section className="featured-products">
         <div className="container">
-          <h2>Produk Unggulan</h2>
+          <h2>Rekomendasi Buket</h2>
           <div className="products-grid featured">
             {loading ? (
               <p>Memuat produk...</p>

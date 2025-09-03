@@ -55,7 +55,7 @@ router.post('/', auth, async (req, res) => {
     // 2. Insert order items
     const orderItemsValues = orderItems.map(item => [
       orderId,
-      item.id || item.product_id,
+      item.product_id, // Menggunakan product_id dari item keranjang
       item.quantity,
       item.price
     ]);
