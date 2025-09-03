@@ -41,6 +41,7 @@ const AdminOrders = () => {
     { value: 'dibatalkan', label: 'Dibatalkan', color: '#f56565' },
   ];
 
+  // === PERBAIKAN DI SINI ===
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
@@ -59,7 +60,9 @@ const AdminOrders = () => {
       alert('Status pesanan berhasil diupdate!');
     } catch (error) {
       console.error("Gagal mengupdate status pesanan:", error);
-      alert('Gagal mengupdate status.');
+      // Tampilkan pesan error dari backend jika ada, jika tidak tampilkan pesan default
+      const errorMessage = error.response?.data?.message || 'Gagal mengupdate status.';
+      alert(errorMessage);
     }
   };
 
@@ -80,7 +83,8 @@ const AdminOrders = () => {
       alert('Pesanan berhasil dihapus!');
     } catch (error) {
       console.error("Gagal menghapus pesanan:", error);
-      alert('Gagal menghapus pesanan.');
+      const errorMessage = error.response?.data?.message || 'Gagal menghapus pesanan.';
+      alert(errorMessage);
     }
   };
 
@@ -119,7 +123,7 @@ const AdminOrders = () => {
   };
 
   const getStatusColor = (status) => {
-    const statusObj = statusOptions.find(opt => opt.value === status);
+    const statusObj = statusOptions.find(opt => opt.value === status.toLowerCase());
     return statusObj ? statusObj.color : '#718096';
   };
 
@@ -141,8 +145,10 @@ const AdminOrders = () => {
     <div className="admin-orders">
       <div className="admin-container">
         <div className="admin-header">
-          <h1>Kelola Pesanan</h1>
-          <p>Kelola semua pesanan customer</p>
+          <div>
+            <h1>Kelola Pesanan</h1>
+            <p>Kelola semua pesanan customer</p>
+          </div>
           <button className="btn-refresh" onClick={fetchOrders}>
             <i className="fas fa-sync-alt"></i> Refresh
           </button>
@@ -181,9 +187,9 @@ const AdminOrders = () => {
                     <td>{formatPrice(order.total_pembayaran)}</td>
                     <td>
                       <select
-                        value={order.status}
+                        value={order.status.toLowerCase()}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                        className={`status-select status-${order.status}`}
+                        className={`status-select status-${order.status.toLowerCase()}`}
                         style={{ borderColor: getStatusColor(order.status) }}
                       >
                         {statusOptions.map(option => (
@@ -233,8 +239,8 @@ const AdminOrders = () => {
               <div className="modal-body">
                 <div className="order-detail-section">
                   <h3>Informasi Customer</h3>
-                  <p><strong>Nama:</strong> {selectedOrder.customer_name}</p>
-                  <p><strong>Email:</strong> {selectedOrder.customer_email}</p>
+                  <p><strong>Nama:</strong> {selectedOrder.nama_user}</p>
+                  <p><strong>Email:</strong> {selectedOrder.email}</p>
                   <p><strong>Tanggal Pesan:</strong> {formatDate(selectedOrder.created_at)}</p>
                 </div>
 
@@ -281,12 +287,12 @@ const AdminOrders = () => {
                 <div className="order-detail-section">
                   <h3>Status Pesanan</h3>
                   <select
-                    value={selectedOrder.status}
+                    value={selectedOrder.status.toLowerCase()}
                     onChange={(e) => {
                       handleStatusChange(selectedOrder.id, e.target.value);
                       setSelectedOrder({...selectedOrder, status: e.target.value});
                     }}
-                    className={`status-select status-${selectedOrder.status}`}
+                    className={`status-select status-${selectedOrder.status.toLowerCase()}`}
                     style={{ borderColor: getStatusColor(selectedOrder.status) }}
                   >
                     {statusOptions.map(option => (

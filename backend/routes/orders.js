@@ -156,33 +156,35 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+// === PERBAIKAN DI SINI ===
 // Update order status (admin only)
 router.put('/:id/status', auth, async (req, res) => {
   const { status } = req.body;
   
-  // Check if user is admin
   if (req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang dapat mengupdate status.' });
   }
   
   try {
     const validStatuses = ['pending', 'diproses', 'dikirim', 'selesai', 'dibatalkan'];
-    if (!validStatuses.includes(status)) {
+    const lowerCaseStatus = status.toLowerCase();
+
+    if (!validStatuses.includes(lowerCaseStatus)) {
       return res.status(400).json({ message: 'Status tidak valid' });
     }
 
     const [result] = await db.promise().query(
       'UPDATE orders SET status = ? WHERE id = ?',
-      [status, req.params.id]
+      [lowerCaseStatus, req.params.id]
     );
     
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: 'Order tidak ditemukan' });
     }
     
     res.json({ message: 'Status order berhasil diupdate' });
   } catch (error) {
-    console.error('Update Order Status Error:', error);
+    console.error(`Error updating status for order ${req.params.id}:`, error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
