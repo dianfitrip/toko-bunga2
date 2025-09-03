@@ -41,17 +41,9 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <h1>FLORIST - Toko Buket Bunga</h1>
-          <p>Diskon Spesial 20% untuk semua produk mawar di bulan ini... jangan lewatkan!</p>
+          <h1>Toko Buket Bunga Terbaik di Bantul</h1>
+          <p>Selamat Datang, ayo borong!</p>
           <Link to="/products" className="cta-button">Lihat Produk</Link>
-        </div>
-      </section>
-
-      {/* Promo Banner */}
-      <section className="promo-banner">
-        <div className="container">
-          <h2>FLOORST. <span className="discount">Diskon Spesial 20%</span></h2>
-          <p>Dapatkan diskon spesial untuk pembelian pertama Anda! Gunakan kode: <strong>WELCOME20</strong></p>
         </div>
       </section>
 
@@ -92,7 +84,7 @@ const HomePage = () => {
               </ul>
             </div>
             <div className="about-image">
-              <img src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fGZsb3dlciUyMGJvdXF1ZXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60" alt="Florist" />
+              <img src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fGZsb3dlciUyMGJvdXF1ZXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60" alt="Florist." />
             </div>
           </div>
         </div>
