@@ -28,15 +28,16 @@ const AdminDashboard = () => {
         setLoading(true);
         setError('');
         const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/dashboard/stats`, getAuthHeaders());
-        setStats({
-          totalProduk: data.totalProduk,
-          totalPesanan: data.totalPesanan,
-          totalUser: data.totalUser,
-        });
-        // Pastikan pesananTerbaru adalah array sebelum di-set
-        if (Array.isArray(data.pesananTerbaru)) {
-          setRecentOrders(data.pesananTerbaru);
+        
+        if (data) {
+          setStats({
+            totalProduk: data.totalProduk || 0,
+            totalPesanan: data.totalPesanan || 0,
+            totalUser: data.totalUser || 0,
+          });
+          setRecentOrders(Array.isArray(data.pesananTerbaru) ? data.pesananTerbaru : []);
         }
+
       } catch (err) {
         setError('Gagal memuat data dasbor.');
         console.error('Fetch dashboard error:', err);
@@ -64,8 +65,7 @@ const AdminDashboard = () => {
   };
 
   const getStatusClass = (status) => {
-    if (!status) return 'pending';
-    return status.toLowerCase();
+    return status ? status.toLowerCase() : 'pending';
   }
 
   return (
@@ -130,18 +130,16 @@ const AdminDashboard = () => {
                 <tbody>
                   {loading ? (
                     <tr><td colSpan="5" style={{ textAlign: 'center' }}>Memuat pesanan...</td></tr>
-                  ) : recentOrders && recentOrders.length > 0 ? (
-                    recentOrders.map((order, index) => (
-                      <tr key={index}>
+                  ) : recentOrders.length > 0 ? (
+                    recentOrders.map((order) => (
+                      <tr key={order.id}>
                         <td>#{order.id}</td>
-                        {/* -- PERBAIKAN DI SINI -- */}
-                        <td>{order.customer || 'N/A'}</td>
-                        {/* -- AKHIR PERBAIKAN -- */}
+                        <td>{order.customer || 'Pengguna Dihapus'}</td>
                         <td>{formatDate(order.tanggal)}</td>
                         <td>{formatPrice(order.amount)}</td>
                         <td>
                           <span className={`status-badge status-${getStatusClass(order.status)}`}>
-                            {order.status}
+                            {order.status || 'pending'}
                           </span>
                         </td>
                       </tr>
