@@ -4,8 +4,8 @@ import axios from 'axios';
 import ProductCard from '../../components/ProductCard';
 import './HomePage.css';
 
-const API_URL = 'http://localhost:5000/api/products';
-const BASE_URL = 'http://localhost:5000/';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/products`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/`;
 
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -15,7 +15,6 @@ const HomePage = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(API_URL);
-        // Format URL gambar dan ambil 3 produk pertama
         const formattedProducts = data.slice(0, 3).map(product => ({
           ...product,
           name: product.nama_produk,

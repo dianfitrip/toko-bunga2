@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Admin.css';
 
-const API_URL = 'http://localhost:5000/api/products';
-const BASE_URL = 'http://localhost:5000/';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/products`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/`;
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -100,7 +100,6 @@ const AdminProducts = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validasi file
       if (!file.type.startsWith('image/')) {
         setError('Hanya file gambar yang diizinkan');
         return;

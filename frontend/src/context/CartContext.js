@@ -8,8 +8,8 @@ export const useCart = () => {
   return useContext(CartContext);
 };
 
-const API_URL = 'http://localhost:5000/api/cart';
-const BASE_URL = 'http://localhost:5000/';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/cart`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/`;
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -37,10 +37,9 @@ export const CartProvider = ({ children }) => {
       const { data } = await axios.get(API_URL, getAuthHeaders());
       const formattedItems = data.map(item => ({
         ...item,
-        // --- PERBAIKAN DI SINI ---
         image: item.gambar ? `${BASE_URL}${item.gambar.replace(/\\/g, '/')}` : 'https://placehold.co/100',
-        price: parseFloat(item.harga), // Menggunakan item.harga
-        name: item.nama_produk // Menggunakan item.nama_produk
+        price: parseFloat(item.harga),
+        name: item.nama_produk
       }));
       setCartItems(formattedItems);
     } catch (error) {
@@ -65,7 +64,7 @@ export const CartProvider = ({ children }) => {
     try {
       await axios.post(API_URL, { product_id: productId, quantity }, getAuthHeaders());
       alert('Produk berhasil ditambahkan ke keranjang!');
-      fetchCartItems(); // Muat ulang keranjang setelah menambah item
+      fetchCartItems(); 
     } catch (error) {
       console.error("Gagal menambah ke keranjang:", error);
       alert('Gagal menambahkan produk.');
@@ -92,7 +91,7 @@ export const CartProvider = ({ children }) => {
     addToCart,
     updateQuantity,
     removeFromCart,
-    fetchCartItems, // <-- TAMBAHKAN BARIS INI
+    fetchCartItems,
     itemCount: cartItems.reduce((acc, item) => acc + item.quantity, 0)
   };
 

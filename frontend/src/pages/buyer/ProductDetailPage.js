@@ -3,10 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
-import './ProductDetailPage.css'; // Kita akan buat file CSS ini
+import './ProductDetailPage.css';
 
-const API_URL = 'http://localhost:5000/api/products';
-const BASE_URL = 'http://localhost:5000/';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/products`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/`;
 
 const ProductDetailPage = () => {
   const { id } = useParams();

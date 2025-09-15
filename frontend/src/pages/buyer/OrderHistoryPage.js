@@ -11,7 +11,7 @@ const OrderHistoryPage = () => {
     const fetchOrderHistory = async () => {
       try {
         const token = localStorage.getItem('token');
-        const { data } = await axios.get('http://localhost:5000/api/orders/my-orders', {
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/my-orders`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -31,7 +31,6 @@ const OrderHistoryPage = () => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
   };
 
-  // === PERBAIKAN DI SINI ===
   const getStatusDisplay = (status) => {
     if (!status) return { text: 'Pending', className: 'status-pending' };
     

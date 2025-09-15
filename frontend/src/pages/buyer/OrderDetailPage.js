@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import './OrderDetailPage.css'; // Kita akan buat file CSS ini nanti
+import './OrderDetailPage.css';
 
-const API_URL = 'http://localhost:5000/api/orders';
-const BASE_URL = 'http://localhost:5000/';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/orders`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/`;
 
 const OrderDetailPage = () => {
   const { orderId } = useParams();

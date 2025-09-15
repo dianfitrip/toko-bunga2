@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../../context/AuthContext'; // Import useAuth
-import { useCart } from '../../context/CartContext'; // Import useCart
+import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import './PlaceOrderPage.css';
 
 const PlaceOrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser } = useAuth();
-  const { fetchCartItems } = useCart(); // Ambil fungsi untuk refresh cart
+  const { fetchCartItems } = useCart();
 
   const { cartItems, subtotal } = location.state || { cartItems: [], subtotal: 0 };
   
@@ -41,14 +41,14 @@ const PlaceOrderPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/orders', orderData, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/orders`, orderData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
       
       alert('Pesanan berhasil dibuat!');
-      fetchCartItems(); // Kosongkan keranjang di frontend
+      fetchCartItems();
       navigate('/my-orders');
     } catch (error) {
       console.error('Order creation failed:', error);
@@ -61,7 +61,6 @@ const PlaceOrderPage = () => {
   };
   
   if (!cartItems || cartItems.length === 0) {
-    // Redirect jika tidak ada item
     React.useEffect(() => navigate('/cart'), [navigate]);
     return null;
   }

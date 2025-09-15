@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Admin.css';
 
-const API_URL = 'http://localhost:5000/api/users';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/users`;
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -93,7 +93,6 @@ const AdminUsers = () => {
     
     try {
       if (isEditing) {
-        // Data yang dikirim untuk update tidak menyertakan password atau status
         const updateData = {
           nama_user: formData.nama_user,
           email: formData.email,

@@ -3,9 +3,8 @@ import axios from 'axios';
 import ProductCard from '../../components/ProductCard';
 import './ProductPage.css';
 
-// URL dari backend API Anda
-const API_URL = 'http://localhost:5000/api/products';
-const BASE_URL = 'http://localhost:5000/';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/products`;
+const BASE_URL = `${process.env.REACT_APP_API_URL}/`;
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -17,10 +16,8 @@ const ProductPage = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(API_URL);
-        // Memformat URL gambar sebelum disimpan ke state
         const formattedProducts = data.map(product => ({
           ...product,
-          // Menggunakan nama kolom yang konsisten
           name: product.nama_produk,
           price: parseFloat(product.harga),
           image: product.gambar ? `${BASE_URL}${product.gambar.replace(/\\/g, '/')}` : 'https://placehold.co/600x400',

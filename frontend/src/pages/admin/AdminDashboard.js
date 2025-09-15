@@ -26,8 +26,8 @@ const AdminDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        setError(''); // Reset error
-        const { data } = await axios.get('http://localhost:5000/api/dashboard/stats', getAuthHeaders());
+        setError('');
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/dashboard/stats`, getAuthHeaders());
         setStats({
           totalProduk: data.totalProduk,
           totalPesanan: data.totalPesanan,
