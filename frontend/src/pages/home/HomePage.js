@@ -15,14 +15,18 @@ const HomePage = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(API_URL);
-        const formattedProducts = data.slice(0, 3).map(product => ({
-          ...product,
-          name: product.nama_produk,
-          price: parseFloat(product.harga),
-          image: product.gambar ? `${BASE_URL}${product.gambar.replace(/\\/g, '/')}` : 'https://placehold.co/600x400',
-          description: product.deskripsi
-        }));
-        setFeaturedProducts(formattedProducts);
+        if (Array.isArray(data)) {
+          const formattedProducts = data.slice(0, 3).map(product => ({
+            ...product,
+            name: product.nama_produk,
+            price: parseFloat(product.harga),
+            image: product.gambar ? `${BASE_URL}${product.gambar.replace(/\\/g, '/')}` : 'https://placehold.co/600x400',
+            description: product.deskripsi
+          }));
+          setFeaturedProducts(formattedProducts);
+        } else {
+          console.error("Data produk yang diterima bukan array:", data);
+        }
       } catch (err) {
         console.error("Error fetching products:", err);
       } finally {

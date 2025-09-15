@@ -127,7 +127,7 @@ const AdminDashboard = () => {
                 <tbody>
                   {loading ? (
                     <tr><td colSpan="5" style={{ textAlign: 'center' }}>Memuat pesanan...</td></tr>
-                  ) : recentOrders.length > 0 ? (
+                  ) : recentOrders && recentOrders.length > 0 ? (
                     recentOrders.map((order, index) => (
                       <tr key={index}>
                         <td>#{order.id}</td>

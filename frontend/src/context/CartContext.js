@@ -35,18 +35,20 @@ export const CartProvider = ({ children }) => {
     setLoading(true);
     try {
       const { data } = await axios.get(API_URL, getAuthHeaders());
-      const formattedItems = data.map(item => ({
-        ...item,
-        image: item.gambar ? `${BASE_URL}${item.gambar.replace(/\\/g, '/')}` : 'https://placehold.co/100',
-        price: parseFloat(item.harga),
-        name: item.nama_produk
-      }));
-      setCartItems(formattedItems);
+      if (Array.isArray(data)) {
+        const formattedItems = data.map(item => ({
+          ...item,
+          image: item.gambar ? `${BASE_URL}${item.gambar.replace(/\\/g, '/')}` : 'https://placehold.co/100',
+          price: parseFloat(item.harga),
+          name: item.nama_produk
+        }));
+        setCartItems(formattedItems);
+      } else {
+        console.error("Data keranjang yang diterima bukan array:", data);
+        setCartItems([]);
+      }
     } catch (error) {
       console.error("Gagal mengambil item keranjang:", error);
-      if (error.response && error.response.status === 401) {
-        // Mungkin perlu fungsi logout dari AuthContext di sini
-      }
     } finally {
       setLoading(false);
     }
@@ -64,7 +66,7 @@ export const CartProvider = ({ children }) => {
     try {
       await axios.post(API_URL, { product_id: productId, quantity }, getAuthHeaders());
       alert('Produk berhasil ditambahkan ke keranjang!');
-      fetchCartItems(); 
+      fetchCartItems();
     } catch (error) {
       console.error("Gagal menambah ke keranjang:", error);
       alert('Gagal menambahkan produk.');
@@ -72,7 +74,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = async (cartId, quantity) => {
-    if (quantity < 1) return;
+    if (quantity < 1) {
+      removeFromCart(cartId);
+      return;
+    }
     try {
       await axios.put(`${API_URL}/${cartId}`, { quantity }, getAuthHeaders());
       fetchCartItems();
@@ -81,8 +86,13 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-    const removeFromCart = async (cartId) => {
-    // ... (fungsi ini biarkan seperti sebelumnya)
+  const removeFromCart = async (cartId) => {
+    try {
+      await axios.delete(`${API_URL}/${cartId}`, getAuthHeaders());
+      fetchCartItems();
+    } catch (error) {
+      console.error("Gagal menghapus item dari keranjang:", error);
+    }
   };
 
   const value = {
