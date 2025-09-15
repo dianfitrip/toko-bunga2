@@ -33,7 +33,10 @@ const AdminDashboard = () => {
           totalPesanan: data.totalPesanan,
           totalUser: data.totalUser,
         });
-        setRecentOrders(data.pesananTerbaru);
+        // Pastikan pesananTerbaru adalah array sebelum di-set
+        if (Array.isArray(data.pesananTerbaru)) {
+          setRecentOrders(data.pesananTerbaru);
+        }
       } catch (err) {
         setError('Gagal memuat data dasbor.');
         console.error('Fetch dashboard error:', err);
@@ -49,17 +52,17 @@ const AdminDashboard = () => {
     { title: 'Total Pesanan', value: stats.totalPesanan, icon: 'fas fa-shopping-bag', color: '#38a169', link: '/admin/orders' },
     { title: 'Total User', value: stats.totalUser, icon: 'fas fa-users', color: '#3182ce', link: '/admin/users' },
   ];
-  
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
   };
-  
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('id-ID', {
       day: '2-digit', month: 'short', year: 'numeric'
     });
   };
-  
+
   const getStatusClass = (status) => {
     if (!status) return 'pending';
     return status.toLowerCase();
@@ -131,7 +134,9 @@ const AdminDashboard = () => {
                     recentOrders.map((order, index) => (
                       <tr key={index}>
                         <td>#{order.id}</td>
-                        <td>{order.customer}</td>
+                        {/* -- PERBAIKAN DI SINI -- */}
+                        <td>{order.customer || 'N/A'}</td>
+                        {/* -- AKHIR PERBAIKAN -- */}
                         <td>{formatDate(order.tanggal)}</td>
                         <td>{formatPrice(order.amount)}</td>
                         <td>

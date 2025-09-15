@@ -12,13 +12,13 @@ const app = express();
 // Middleware
 app.use(cors());
 
-// --- PERBAIKAN DI SINI ---
+// --- TAMBAHKAN BLOK INI ---
 // Middleware untuk menambahkan header ngrok-skip-browser-warning
 app.use((req, res, next) => {
   res.setHeader("ngrok-skip-browser-warning", "true");
   next();
 });
-// --- AKHIR PERBAIKAN ---
+// --- AKHIR DARI BLOK TAMBAHAN ---
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
