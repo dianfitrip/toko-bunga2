@@ -11,6 +11,15 @@ const app = express();
 
 // Middleware
 app.use(cors());
+
+// --- PERBAIKAN DI SINI ---
+// Middleware untuk menambahkan header ngrok-skip-browser-warning
+app.use((req, res, next) => {
+  res.setHeader("ngrok-skip-browser-warning", "true");
+  next();
+});
+// --- AKHIR PERBAIKAN ---
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -53,23 +62,12 @@ try {
   console.error('✗ Error loading cart routes:', error.message);
 }
 
-// === TAMBAHKAN INI ===
 try {
   const dashboardRoutes = require('./routes/dashboard');
   console.log('✓ Dashboard routes loaded successfully');
   app.use('/api/dashboard', dashboardRoutes);
 } catch (error) {
   console.error('✗ Error loading dashboard routes:', error.message);
-}
-// ======================
-
-try {
-  // Review routes tidak ada di file Anda, jadi saya hapus
-  // const reviewRoutes = require('./routes/reviews');
-  // console.log('✓ Review routes loaded successfully');
-  // app.use('/api/reviews', reviewRoutes);
-} catch (error) {
-  // console.error('✗ Error loading review routes:', error.message);
 }
 
 try {
