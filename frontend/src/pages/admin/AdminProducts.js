@@ -25,22 +25,29 @@ const AdminProducts = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
   const fetchProducts = async () => {
     setLoading(true);
     setError('');
     try {
       const { data } = await axios.get(API_URL);
-      setProducts(data);
+      // -- PERBAIKAN DI SINI --
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error("Data produk yang diterima bukan array:", data);
+        setProducts([]); // Set sebagai array kosong jika data tidak valid
+      }
+      // -- AKHIR PERBAIKAN --
     } catch (error) {
       console.error("Gagal mengambil data produk:", error);
       setError('Gagal memuat data produk');
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const resetForm = () => {
     setFormData({ 
@@ -132,6 +139,9 @@ const AdminProducts = () => {
       }
 
       const config = {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -208,7 +218,7 @@ const AdminProducts = () => {
                   <tr key={product.id}>
                     <td>
                       <img 
-                        src={product.gambar ? `${BASE_URL}${product.gambar}` : 'https://placehold.co/60'} 
+                        src={product.gambar ? `${BASE_URL}${product.gambar.replace(/\\/g, '/')}` : 'https://placehold.co/60'} 
                         alt={product.nama_produk} 
                         className="product-table-image"
                         onError={(e) => {
